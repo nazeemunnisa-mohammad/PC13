@@ -1,0 +1,58 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+    home: ClockExample(),
+  ));
+}
+
+class ClockExample extends StatefulWidget {
+  @override
+  _ClockExampleState createState() => _ClockExampleState();
+}
+
+class _ClockExampleState extends State<ClockExample> {
+  late Timer timer;
+  String currentTime = "";
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the current time
+    currentTime = getCurrentTime();
+    // Update the clock every 1 second
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        currentTime = getCurrentTime();
+      });
+    });
+  }
+
+  // Function to get formatted current time
+  String getCurrentTime() {
+    final now = DateTime.now();
+    return "${now.hour.toString().padLeft(2, '0')}:"
+           "${now.minute.toString().padLeft(2, '0')}:"
+           "${now.second.toString().padLeft(2, '0')}";
+  }
+
+  @override
+  void dispose() {
+    timer.cancel(); // Cancel the timer when widget is disposed
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Digital Clock")),
+      body: Center(
+        child: Text(
+          currentTime,
+          style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
